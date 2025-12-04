@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<style>
+        :root {
+            --bg-color: #f4f5f7;
+            --card-bg: #ffffff;
+            --text-main: #1a202c;
+            --text-secondary: #718096;
+            --accent-color: #2d3748; /* Dark Slate */
+            --accent-hover: #1a202c;
+            --border-color: #e2e8f0;
+            --input-bg: #f7fafc;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * { box-sizing: border-box; outline: none; }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            padding: 40px 20px; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 2px 0;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .meta-info {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .authorname { font-size: 12px; color: var(--text-secondary); margin: 0; font-weight: 500; text-align: center;}
+ 
+        .img-container { 
+            text-align: center; 
+            background: var(--input-bg); 
+            padding: 15px; 
+            border-radius: var(--radius); 
+            border: 2px dashed var(--border-color); 
+            min-height: 120px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column;
+            transition: border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-container:hover { border-color: #cbd5e0; }
+
+        img { 
+            max-width: 100%; 
+            max-height: 300px; 
+            border-radius: 4px; 
+            display: none; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+        }
+
+        .label { 
+            text-align: center;
+            font-size: 10px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            color: var(--text-secondary); 
+            margin-bottom: 8px; 
+            align-self: flex-start;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            background: #fff;
+            padding: 10px;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--accent-color);
+            background: #f0f4f8;
+        }
+        .upload-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            pointer-events: none; 
+        }
+        
+        .ref-gallery {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .ref-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            display: block; 
+            cursor: pointer;
+        }
+        .ref-thumb:hover { opacity: 0.7; border-color: red; } 
+
+        .settings-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 0px;
+        }
+        .setting-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232d3748%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 8px auto;
+        }
+        select:hover { border-color: #cbd5e0; }
+        select:focus { border-color: var(--accent-color); }
+
+        textarea { 
+            width: 100%; 
+            height: 100px; 
+            padding: 12px; 
+            border-radius: var(--radius); 
+            border: 1px solid var(--border-color); 
+            background: var(--card-bg); 
+            color: var(--text-main); 
+            font-family: inherit; 
+            resize: vertical;
+            font-size: 14px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus { 
+            border-color: var(--accent-color); 
+            box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1);
+        }
+
+        textarea::placeholder { color: #a0aec0; }
+
+        button { 
+            padding: 12px; 
+            border-radius: var(--radius); 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            width: 100%;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+        }
+
+        #btn-capture {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        #btn-capture:hover { background: #f7fafc; border-color: #cbd5e0; }
+
+        #btn-generate {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            margin-top: 10px;
+        }
+        #btn-generate:hover { 
+            background: var(--accent-hover); 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #btn-generate:active { transform: translateY(0); }
+        #btn-generate:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
+
+        #loader { 
+            display: none; 
+            color: var(--accent-color); 
+            font-size: 13px; 
+            font-weight: 500; 
+            text-align: center; 
+            padding: 10px;
+            background: #ebf8ff;
+            border-radius: var(--radius);
+        }
+
+        #error-msg { 
+            display: none; 
+            color: #c53030; 
+            background: #fff5f5; 
+            padding: 12px; 
+            border: 1px solid #feb2b2; 
+            border-radius: var(--radius); 
+            font-size: 12px; 
+            white-space: pre-wrap; 
+        }
+
+        .download-btn { 
+            display: none; 
+            margin-top: 15px; 
+            background: transparent;
+            color: var(--accent-color); 
+            text-decoration: none; 
+            font-size: 13px; 
+            border: 1px solid var(--accent-color); 
+            padding: 8px 16px; 
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .download-btn:hover { background: var(--accent-color); color: white; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="margin:0; color: black;">Banana Render Pro</h1>
+    <p class="authorname">Developed by Borgniet Rudy</p>
+
+    <button onclick="captureSketchUp()" id="btn-capture">1. 📸 Capture from SketchUp</button>
+    <div class="img-container">
+        <span class="label">Source (SketchUp)</span>
+        <img id="preview" src="" alt="SketchUp View">
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+        <span class="label">Reference images (Optional)</span>
+        <div class="upload-zone" id="drop-zone" onclick="document.getElementById('ref-input').click()">
+            <span class="upload-text">Click or drag images here</span>
+            <input type="file" id="ref-input" multiple accept="image/*" style="display:none" onchange="handleRefFiles(this.files)">
+        </div>
+        <div id="ref-gallery" class="ref-gallery"></div>
+    </div>
+
+    <textarea id="prompt" placeholder="Describe here the materials and additional features (e.g., Modern red brick without nuances, black aluminium window frames etc...)"></textarea>
+    
+    <div class="settings-row">
+        <div class="setting-group">
+            <span class="label" style="margin-bottom:2px">Resolution</span>
+            <select id="resolution-select">
+                <option value="standard">1K (Fast)</option>
+                <option value="2K">2K (Balanced)</option>
+                <option value="4K" selected>4K (High Quality)</option>
+            </select>
+        </div>
+        <div class="setting-group">
+            <span class="label" style="margin-bottom:2px">Ratio</span>
+            <select id="ratio-select">
+                <option value="auto" selected>Auto (SketchUp View)</option>
+                <option value="1:1">Square (1:1)</option>
+                <option value="16:9">Landscape (16:9)</option>
+                <option value="4:3">Standard (4:3)</option>
+                <option value="9:16">Portrait (9:16)</option>
+            </select>
+        </div>
+    </div>
+    <button onclick="callGemini()" id="btn-generate">2. Generate (Gemini 3 Pro)</button>
+
+    <div id="loader">✨ Calculating rendering in progress....<br><small>(This may take 30 seconds.)</small></div>
+    <div id="error-msg"></div>
+
+    <div class="img-container">
+        <span class="label">AI Result</span>
+        <img id="generatedImage" src="" alt="Image Générée">
+        <a id="dlLink" class="download-btn" href="#" download="rendu_nanobanana.png">Save as...</a>
+    </div>
+</div>
+
+<script>
+    let currentBase64 = null;
+    let currentMime = null;
+    let referenceImages = []; 
+
+    let GOOGLE_API_KEY = "";
+
+    function receiveApiKey(key) {
+        GOOGLE_API_KEY = key;
+        console.log("API KEY Sent.");
+    }
+
+    function captureSketchUp() {
+        if (typeof sketchup !== 'undefined') sketchup.capture_view();
+    }
+
+    function receiveImageFromRuby(mime, base64) {
+        const img = document.getElementById('preview');
+        if (!img) return;
+        currentMime = mime;
+        currentBase64 = base64;
+        img.src = "data:" + mime + ";base64," + base64;
+        img.style.display = "block";
+        
+        document.getElementById('generatedImage').style.display = 'none';
+        document.getElementById('dlLink').style.display = 'none';
+        document.getElementById('error-msg').style.display = 'none';
+    }
+
+    const dropZone = document.getElementById('drop-zone');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            handleRefFiles(e.dataTransfer.files);
+        }
+    });
+
+    function handleRefFiles(files) {
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64Raw = e.target.result.split(',')[1];
+                const mimeType = file.type;
+                referenceImages.push({ mime: mimeType, data: base64Raw });
+                const thumb = document.createElement('img');
+                thumb.src = e.target.result;
+                thumb.className = 'ref-thumb';
+                thumb.title = "Click for remove";
+                thumb.onclick = function() { removeReference(this, base64Raw); };
+                document.getElementById('ref-gallery').appendChild(thumb);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeReference(imgElement, b64Data) {
+        referenceImages = referenceImages.filter(img => img.data !== b64Data);
+        imgElement.remove();
+    }
+
+    async function callGemini() {
+        const apiKey = GOOGLE_API_KEY;
+        if (!apiKey) { 
+            alert("Erreur : La clé API n'a pas été chargée depuis le plugin."); 
+            return; 
+        }
+
+        const userText = document.getElementById('prompt').value;
+        
+        const resolution = document.getElementById('resolution-select').value; // 'standard', '2K', '4K'
+        const ratio = document.getElementById('ratio-select').value; // 'auto', '16:9', etc.
+
+        const styleInstruction = `
+        Make the first image like a real photo. Shot in natural daylight.
+        High-resolution photography style.
+        Looks like a candid real-life professional photography taken with a iphone 4k or DSLR. 
+        Hyperreal, indistinguishable from a real photo. 
+        Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
+        `;
+        const finalPrompt = styleInstruction + "\n\nAdditional details: " + userText;
+        
+        const loader = document.getElementById('loader');
+        const errorDiv = document.getElementById('error-msg');
+        const resultImg = document.getElementById('generatedImage');
+        const dlLink = document.getElementById('dlLink');
+
+        if (!apiKey || apiKey === "TA_CLE_API_ICI") { 
+            alert("Error API !"); 
+            return; 
+        }
+        if (!currentBase64) { alert("First, capture !"); return; }
+
+        loader.style.display = 'block';
+        errorDiv.style.display = 'none';
+        resultImg.style.display = 'none';
+        dlLink.style.display = 'none';
+        errorDiv.innerText = "";
+
+        const modelName = "models/gemini-3-pro-image-preview";
+        const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`;
+
+        let parts = [
+            { "text": finalPrompt }
+        ];
+
+        parts.push({ 
+            "inline_data": { "mime_type": currentMime, "data": currentBase64 } 
+        });
+
+        referenceImages.forEach(refImg => {
+            parts.push({
+                "inline_data": { "mime_type": refImg.mime, "data": refImg.data }
+            });
+        });
+
+        let imgConfig = {};
+
+        if (ratio !== 'auto') {
+            imgConfig.aspectRatio = ratio;
+        }
+
+        if (resolution === '4K') {
+            imgConfig.imageSize = "4K"; 
+        } 
+        
+        const payload = {
+            "contents": [{
+                "parts": parts
+            }],
+            "generationConfig": {
+                "responseModalities": ["IMAGE", "TEXT"],
+                "imageConfig": imgConfig
+            }
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const rawText = await response.text();
+            
+            if (!response.ok) {
+                const errJson = JSON.parse(rawText);
+                throw new Error(`Error API (${response.status}): ${errJson.error.message}`);
+            }
+
+            const data = JSON.parse(rawText);
+            const candidate = data.candidates?.[0];
+
+            if (candidate?.finishReason && candidate.finishReason !== "STOP") {
+                throw new Error(`⚠️ Rejected. error : ${candidate.finishReason}`);
+            }
+
+            const resParts = candidate?.content?.parts;
+            if (!resParts) throw new Error("Réponse vide de Google.");
+
+            let imageFound = false;
+            for (let part of resParts) {
+                if (part.inlineData && part.inlineData.data) {
+                    const b64 = part.inlineData.data;
+                    const mime = part.inlineData.mimeType || "image/png";
+                    const finalSrc = `data:${mime};base64,${b64}`;
+                    
+                    resultImg.src = finalSrc;
+                    resultImg.style.display = "block";
+                    dlLink.href = finalSrc;
+                    dlLink.style.display = "inline-block";
+                    imageFound = true;
+                } 
+                else if (part.inline_data && part.inline_data.data) {
+                    const b64 = part.inline_data.data;
+                    const mime = part.inline_data.mime_type || "image/png";
+                    const finalSrc = `data:${mime};base64,${b64}`;
+                    
+                    resultImg.src = finalSrc;
+                    resultImg.style.display = "block";
+                    dlLink.href = finalSrc;
+                    dlLink.style.display = "inline-block";
+                    imageFound = true;
+                }
+            }
+
+            if (!imageFound) {
+                if (resParts[0].text) {
+                    throw new Error("L'IA a répondu du texte : " + resParts[0].text);
+                }
+                throw new Error("Aucune image trouvée dans la réponse JSON.");
+            }
+
+        } catch (e) {
+            console.error(e);
+            errorDiv.innerText = e.message;
+            errorDiv.style.display = 'block';
+        } finally {
+            loader.style.display = 'none';
+        }
+        window.addEventListener('load', function() {
+            if (typeof sketchup !== 'undefined') {
+                sketchup.request_api_key();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
