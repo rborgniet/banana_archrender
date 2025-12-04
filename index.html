@@ -520,12 +520,12 @@
         } finally {
             loader.style.display = 'none';
         }
-        window.addEventListener('load', function() {
-            if (typeof sketchup !== 'undefined') {
-                sketchup.request_api_key();
-            }
-        });
     }
+    window.addEventListener('load', function() {
+        if (typeof sketchup !== 'undefined') {
+            sketchup.request_api_key();
+        }
+    });
 </script>
 
 </body>
