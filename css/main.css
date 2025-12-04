@@ -1,0 +1,248 @@
+:root {
+    --bg-color: #f4f5f7;
+    --card-bg: #ffffff;
+    --text-main: #1a202c;
+    --text-secondary: #718096;
+    --accent-color: #2d3748; /* Dark Slate */
+    --accent-hover: #1a202c;
+    --border-color: #e2e8f0;
+    --input-bg: #f7fafc;
+    --radius: 8px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+* { box-sizing: border-box; outline: none; }
+
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    padding: 40px 20px; 
+    background-color: var(--bg-color); 
+    color: var(--text-main); 
+    line-height: 1.5;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.container { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 2px 0;
+    color: var(--text-main);
+    text-align: center;
+}
+
+.meta-info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.authorname { font-size: 12px; color: var(--text-secondary); margin: 0; font-weight: 500; text-align: center;}
+
+.img-container { 
+    text-align: center; 
+    background: var(--input-bg); 
+    padding: 15px; 
+    border-radius: var(--radius); 
+    border: 2px dashed var(--border-color); 
+    min-height: 120px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    flex-direction: column;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.img-container:hover { border-color: #cbd5e0; }
+
+img { 
+    max-width: 100%; 
+    max-height: 300px; 
+    border-radius: 4px; 
+    display: none; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+}
+
+.label { 
+    text-align: center;
+    font-size: 10px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    color: var(--text-secondary); 
+    margin-bottom: 8px; 
+    align-self: flex-start;
+}
+
+.upload-zone {
+    border: 2px dashed var(--border-color);
+    background: #fff;
+    padding: 10px;
+    border-radius: var(--radius);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+.upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--accent-color);
+    background: #f0f4f8;
+}
+.upload-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    pointer-events: none; 
+}
+
+.ref-gallery {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+.ref-thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    display: block; 
+    cursor: pointer;
+}
+.ref-thumb:hover { opacity: 0.7; border-color: red; } 
+
+.settings-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 0px;
+}
+.setting-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232d3748%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 8px auto;
+}
+select:hover { border-color: #cbd5e0; }
+select:focus { border-color: var(--accent-color); }
+
+textarea { 
+    width: 100%; 
+    height: 100px; 
+    padding: 12px; 
+    border-radius: var(--radius); 
+    border: 1px solid var(--border-color); 
+    background: var(--card-bg); 
+    color: var(--text-main); 
+    font-family: inherit; 
+    resize: vertical;
+    font-size: 14px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+textarea:focus { 
+    border-color: var(--accent-color); 
+    box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1);
+}
+
+textarea::placeholder { color: #a0aec0; }
+
+button { 
+    padding: 12px; 
+    border-radius: var(--radius); 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 14px; 
+    width: 100%;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+#btn-capture {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+#btn-capture:hover { background: #f7fafc; border-color: #cbd5e0; }
+
+#btn-generate {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    margin-top: 10px;
+}
+#btn-generate:hover { 
+    background: var(--accent-hover); 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+#btn-generate:active { transform: translateY(0); }
+#btn-generate:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
+
+#loader { 
+    display: none; 
+    color: var(--accent-color); 
+    font-size: 13px; 
+    font-weight: 500; 
+    text-align: center; 
+    padding: 10px;
+    background: #ebf8ff;
+    border-radius: var(--radius);
+}
+
+#error-msg { 
+    display: none; 
+    color: #c53030; 
+    background: #fff5f5; 
+    padding: 12px; 
+    border: 1px solid #feb2b2; 
+    border-radius: var(--radius); 
+    font-size: 12px; 
+    white-space: pre-wrap; 
+}
+
+.download-btn { 
+    display: none; 
+    margin-top: 15px; 
+    background: transparent;
+    color: var(--accent-color); 
+    text-decoration: none; 
+    font-size: 13px; 
+    border: 1px solid var(--accent-color); 
+    padding: 8px 16px; 
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+.download-btn:hover { background: var(--accent-color); color: white; }
