@@ -150,7 +150,7 @@
         Hyperreal, indistinguishable from a real photo. 
         Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
         `;
-        const finalPrompt = styleInstruction + "\n\nAdditional details: " + userText;
+        const finalPrompt = styleInstruction + userText;
         
         const loader = document.getElementById('loader');
         const errorDiv = document.getElementById('error-msg');
