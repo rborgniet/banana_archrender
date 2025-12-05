@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/main.css">
+    <title>Banana Archrender</title>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="margin:0; color: black;">Banana Render Pro</h1>
-    <p class="authorname">Developed by Borgniet Rudy for Starc</p>
+    <h1 class="main-title">Banana Archrender</h1>
 
     <button onclick="captureSketchUp()" id="btn-capture">1. 📸 Capture from SketchUp</button>
     <div class="img-container">
@@ -47,7 +47,8 @@
             </select>
         </div>
     </div>
-    <button onclick="callGemini()" id="btn-generate">2. Generate (Gemini 3 Pro)</button>
+    <div class="text-secondary">Actual model : gemini-3-pro-image-preview</div>
+    <button onclick="callGemini()" id="btn-generate">2. Generate</button>
 
     <div id="loader">✨ Calculating rendering in progress....<br><small>(This may take 30 seconds.)</small></div>
     <div id="error-msg"></div>
@@ -57,6 +58,10 @@
         <img id="generatedImage" src="" alt="Image Générée">
         <a id="dlLink" class="download-btn" href="#" download="rendu_nanobanana.png">Save as...</a>
     </div>
+
+    <footer>
+        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy. Tous droits réservés.</p>
+    </footer>
 </div>
 
 <script>

@@ -79,6 +79,22 @@ img {
     display: none; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
 }
+.main-title {
+    margin-bottom: 18px;
+}
+.text-secondary {
+    font-size: 12px;
+    color: var(--text-secondary)
+}
+.divider {
+    border-bottom: solid 0.01px rgb(150, 150, 150);
+}
+.footer-copyright-text {
+    font-size: 12px;
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: 25px;
+}
 
 .label { 
     text-align: center;
