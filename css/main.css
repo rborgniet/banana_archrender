@@ -3,16 +3,17 @@
     --card-bg: #ffffff;
     --text-main: #1a202c;
     --text-secondary: #718096;
-    --accent-color: #2d3748; /* Dark Slate */
+    --accent-color: #2d3748;
     --accent-hover: #1a202c;
     --border-color: #e2e8f0;
     --input-bg: #f7fafc;
     --radius: 8px;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-
-* { box-sizing: border-box; outline: none; }
-
+* { 
+    box-sizing: border-box; 
+    outline: none; 
+}
 body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
     padding: 40px 20px; 
@@ -23,7 +24,6 @@ body {
     display: flex;
     justify-content: center;
 }
-
 .container { 
     display: flex; 
     flex-direction: column; 
@@ -35,7 +35,6 @@ body {
     width: 100%;
     max-width: 500px;
 }
-
 h1 {
     font-size: 28px;
     font-weight: 700;
@@ -43,7 +42,6 @@ h1 {
     color: var(--text-main);
     text-align: center;
 }
-
 .meta-info {
     display: flex;
     flex-direction: column;
@@ -51,9 +49,6 @@ h1 {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 15px;
 }
-
-.authorname { font-size: 12px; color: var(--text-secondary); margin: 0; font-weight: 500; text-align: center;}
-
 .img-container { 
     text-align: center; 
     background: var(--input-bg); 
@@ -69,9 +64,9 @@ h1 {
     position: relative;
     overflow: hidden;
 }
-
-.img-container:hover { border-color: #cbd5e0; }
-
+.img-container:hover { 
+    border-color: #cbd5e0; 
+}
 img { 
     max-width: 100%; 
     max-height: 300px; 
@@ -95,7 +90,6 @@ img {
     color: var(--text-secondary);
     margin-top: 25px;
 }
-
 .label { 
     text-align: center;
     font-size: 10px; 
@@ -106,7 +100,6 @@ img {
     margin-bottom: 8px; 
     align-self: flex-start;
 }
-
 .upload-zone {
     border: 2px dashed var(--border-color);
     background: #fff;
@@ -126,7 +119,6 @@ img {
     color: var(--text-secondary);
     pointer-events: none; 
 }
-
 .ref-gallery {
     display: flex;
     gap: 8px;
@@ -142,8 +134,10 @@ img {
     display: block; 
     cursor: pointer;
 }
-.ref-thumb:hover { opacity: 0.7; border-color: red; } 
-
+.ref-thumb:hover { 
+    opacity: 0.7; 
+    border-color: red; 
+} 
 .settings-row {
     display: flex;
     gap: 15px;
@@ -173,7 +167,6 @@ select {
 }
 select:hover { border-color: #cbd5e0; }
 select:focus { border-color: var(--accent-color); }
-
 textarea { 
     width: 100%; 
     height: 100px; 
@@ -187,12 +180,10 @@ textarea {
     font-size: 14px;
     transition: border 0.2s, box-shadow 0.2s;
 }
-
 textarea:focus { 
     border-color: var(--accent-color); 
     box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1);
 }
-
 textarea::placeholder { color: #a0aec0; }
 
 button { 
@@ -205,14 +196,15 @@ button {
     transition: all 0.2s ease;
     letter-spacing: 0.3px;
 }
-
 #btn-capture {
-    background: white;
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
+    background: var(--accent-color);
+    color: white;
+    border: none;
 }
-#btn-capture:hover { background: #f7fafc; border-color: #cbd5e0; }
-
+#btn-capture:hover { 
+    background: var(--accent-hover); 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 #btn-generate {
     background: var(--accent-color);
     color: white;
@@ -221,12 +213,10 @@ button {
 }
 #btn-generate:hover { 
     background: var(--accent-hover); 
-    transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 #btn-generate:active { transform: translateY(0); }
 #btn-generate:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
-
 #loader { 
     display: none; 
     color: var(--accent-color); 
@@ -237,7 +227,6 @@ button {
     background: #ebf8ff;
     border-radius: var(--radius);
 }
-
 #error-msg { 
     display: none; 
     color: #c53030; 
@@ -248,7 +237,6 @@ button {
     font-size: 12px; 
     white-space: pre-wrap; 
 }
-
 .download-btn { 
     display: none; 
     margin-top: 15px; 
@@ -261,4 +249,7 @@ button {
     border-radius: 20px;
     transition: all 0.2s;
 }
-.download-btn:hover { background: var(--accent-color); color: white; }
+.download-btn:hover { 
+    background: var(--accent-color); 
+    color: white; 
+}
