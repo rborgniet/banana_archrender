@@ -4,84 +4,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/main.css">
     <title>Banana Archrender</title>
-
-    <style>
-        /* Overlay qui couvre tout l'écran */
-        #access-lock-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.96); /* Fond presque noir */
-            z-index: 2147483647; /* La valeur maximum possible en CSS */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(8px); /* Floute l'arrière-plan */
-            cursor: not-allowed;
-        }
-
-        /* La boîte de message */
-        .lock-message-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 500px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            pointer-events: auto; /* Permet de cliquer sur le lien mailto */
-            cursor: default;
-        }
-
-        .lock-message-box h2 {
-            color: #d32f2f;
-            margin-top: 0;
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .lock-message-box p {
-            color: #333;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 20px 0;
-        }
-
-        .lock-contact-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 24px;
-            background-color: #333;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .lock-contact-btn:hover {
-            background-color: #000;
-        }
-
-        /* Empêche le scroll sur la page derrière */
-        body {
-            overflow: hidden !important; 
-        }
-    </style>
 </head>
 <body>
-
-<div id="access-lock-overlay">
-    <div class="lock-message-box">
-        <h2>⚠️ Application en pause</h2>
-        <p>Cette application a été volontairement mise en pause par le créateur.</p>
-        <p>Pour toute information ou demande d'accès, veuillez contacter :</p>
-        <a href="mailto:Borgniet.rudy@hotmail.com" class="lock-contact-btn">Borgniet.rudy@hotmail.com</a>
-    </div>
-</div>
 
 <div class="container">
     <h1 class="main-title">Banana Archrender</h1>
@@ -102,7 +26,7 @@
     </div>
 
     <textarea id="prompt" placeholder="Describe here the materials and additional features (e.g., Modern red brick without nuances, black aluminium window frames etc...)"></textarea>
-    
+
     <div class="settings-row">
         <div class="setting-group">
             <span class="label" style="margin-bottom:2px">Resolution</span>
@@ -136,21 +60,11 @@
     </div>
 
     <footer>
-        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</div>
+        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</p>
     </footer>
 </div>
 
 <script>
-    // --- AJOUT PROTECTION JS (Empêche clic droit et raccourcis dev) ---
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123) { return false; } // F12
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Shift+J
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U
-    }
-    // ------------------------------------------------------------------
-
     let currentBase64 = null;
     let currentMime = null;
     let referenceImages = []; 
@@ -173,7 +87,7 @@
         currentBase64 = base64;
         img.src = "data:" + mime + ";base64," + base64;
         img.style.display = "block";
-        
+
         document.getElementById('generatedImage').style.display = 'none';
         document.getElementById('dlLink').style.display = 'none';
         document.getElementById('error-msg').style.display = 'none';
@@ -230,7 +144,7 @@
         }
 
         const userText = document.getElementById('prompt').value;
-        
+
         const resolution = document.getElementById('resolution-select').value; // 'standard', '2K', '4K'
         const ratio = document.getElementById('ratio-select').value; // 'auto', '16:9', etc.
 
@@ -242,7 +156,7 @@
         Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
         `;
         const finalPrompt = styleInstruction + userText;
-        
+
         const loader = document.getElementById('loader');
         const errorDiv = document.getElementById('error-msg');
         const resultImg = document.getElementById('generatedImage');
@@ -286,7 +200,7 @@
         if (resolution === '4K') {
             imgConfig.imageSize = "4K"; 
         } 
-        
+
         const payload = {
             "contents": [{
                 "parts": parts
@@ -305,7 +219,7 @@
             });
 
             const rawText = await response.text();
-            
+
             if (!response.ok) {
                 const errJson = JSON.parse(rawText);
                 throw new Error(`Error API (${response.status}): ${errJson.error.message}`);
@@ -327,7 +241,7 @@
                     const b64 = part.inlineData.data;
                     const mime = part.inlineData.mimeType || "image/png";
                     const finalSrc = `data:${mime};base64,${b64}`;
-                    
+
                     resultImg.src = finalSrc;
                     resultImg.style.display = "block";
                     dlLink.href = finalSrc;
@@ -338,7 +252,7 @@
                     const b64 = part.inline_data.data;
                     const mime = part.inline_data.mime_type || "image/png";
                     const finalSrc = `data:${mime};base64,${b64}`;
-                    
+
                     resultImg.src = finalSrc;
                     resultImg.style.display = "block";
                     dlLink.href = finalSrc;
@@ -370,4 +284,3 @@
 </script>
 
 </body>
-</html>
