@@ -35,6 +35,59 @@ body {
     width: 100%;
     max-width: 500px;
 }
+/* --- SÉLECTEUR DE MODE (TOGGLE) --- */
+.mode-selector {
+    display: flex;
+    background: var(--input-bg);
+    padding: 4px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin-bottom: 5px;
+}
+
+.mode-selector label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Cache les petits ronds classiques des boutons radio */
+.mode-selector input[type="radio"] {
+    display: none; 
+}
+
+/* Style quand l'option est sélectionnée */
+.mode-selector label:has(input[type="radio"]:checked) {
+    background: var(--card-bg);
+    color: var(--text-main);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mode-selector label:hover:not(:has(input[type="radio"]:checked)) {
+    color: var(--text-main);
+}
+
+/* --- BOUTON D'UPLOAD ÉDITION --- */
+#btn-upload-edit {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+}
+
+#btn-upload-edit:hover { 
+    background: var(--accent-hover); 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 h1 {
     font-size: 28px;
     font-weight: 700;

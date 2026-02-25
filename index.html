@@ -4,19 +4,62 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/main.css">
     <title>Banana Archrender</title>
+    <style>
+        /* Ajout de quelques styles pour le sélecteur de mode */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            background: #f0f0f0; /* Adapte la couleur à ton main.css si besoin */
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .mode-selector label {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <h1 class="main-title">Banana Archrender</h1>
 
-    <button onclick="captureSketchUp()" id="btn-capture">1. 📸 Capture from SketchUp</button>
-    <div class="img-container">
-        <span class="label">Source (SketchUp)</span>
-        <img id="preview" src="" alt="SketchUp View">
+    <div class="mode-selector">
+        <label>
+            <input type="radio" name="operation-mode" value="sketchup" checked onchange="toggleMode()"> 
+            Capture SketchUp
+        </label>
+        <label>
+            <input type="radio" name="operation-mode" value="edit" onchange="toggleMode()"> 
+            Éditer une image
+        </label>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 5px;">
+    <div id="edit-mode-controls" style="display: none;">
+        <button onclick="document.getElementById('edit-upload-input').click()" id="btn-upload-edit">
+            1. 📂 Upload Image to Edit
+        </button>
+        <input type="file" id="edit-upload-input" accept="image/*" style="display:none" onchange="handleEditUpload(this.files)">
+    </div>
+
+    <div id="sketchup-mode-controls">
+        <button onclick="captureSketchUp()" id="btn-capture">1. 📸 Capture from SketchUp</button>
+    </div>
+
+    <div id="edit-mode-controls" style="display: none;">
+        <button onclick="document.getElementById('edit-upload-input').click()" id="btn-upload-edit" style="background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+            1. 📂 Upload Image to Edit
+        </button>
+        <input type="file" id="edit-upload-input" accept="image/*" style="display:none" onchange="handleEditUpload(this.files)">
+    </div>
+
+    <div class="img-container">
+        <span class="label" id="source-label">Source (SketchUp)</span>
+        <img id="preview" src="" alt="Source View" style="display:none; max-width: 100%; margin-top: 10px;">
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 15px;">
         <span class="label">Reference images (Optional)</span>
         <div class="upload-zone" id="drop-zone" onclick="document.getElementById('ref-input').click()">
             <span class="upload-text">Click or drag images here</span>
@@ -25,7 +68,7 @@
         <div id="ref-gallery" class="ref-gallery"></div>
     </div>
 
-    <textarea id="prompt" placeholder="Describe here the materials and additional features (e.g., Modern red brick without nuances, black aluminium window frames etc...)"></textarea>
+    <textarea id="prompt" placeholder="Describe here the modifications, materials or additional features (e.g., Modern red brick, make the sky blue, etc...)"></textarea>
 
     <div class="settings-row">
         <div class="setting-group">
@@ -39,7 +82,7 @@
         <div class="setting-group">
             <span class="label" style="margin-bottom:2px">Ratio</span>
             <select id="ratio-select">
-                <option value="auto" selected>Auto (SketchUp View)</option>
+                <option value="auto" selected>Auto (Keep Original)</option>
                 <option value="1:1">Square (1:1)</option>
                 <option value="16:9">Landscape (16:9)</option>
                 <option value="4:3">Standard (4:3)</option>
@@ -50,17 +93,17 @@
     <div class="text-secondary">Actual model : gemini-3-pro-image-preview</div>
     <button onclick="callGemini()" id="btn-generate">2. Generate</button>
 
-    <div id="loader">✨ Calculating rendering in progress....<br><small>(This may take 30 seconds.)</small></div>
-    <div id="error-msg"></div>
+    <div id="loader" style="display:none;">✨ Calculating rendering in progress....<br><small>(This may take 30 seconds.)</small></div>
+    <div id="error-msg" style="display:none; color: red;"></div>
 
     <div class="img-container">
         <span class="label">AI Result</span>
-        <img id="generatedImage" src="" alt="Image Générée">
-        <a id="dlLink" class="download-btn" href="#" download="rendu_nanobanana.png">Save as...</a>
+        <img id="generatedImage" src="" alt="Image Générée" style="display:none; max-width: 100%;">
+        <a id="dlLink" class="download-btn" href="#" download="rendu_nanobanana.png" style="display:none;">Save as...</a>
     </div>
 
     <footer>
-        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</p>
+        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</div>
     </footer>
 </div>
 
@@ -74,6 +117,55 @@
     function receiveApiKey(key) {
         GOOGLE_API_KEY = key;
         console.log("API KEY Sent.");
+    }
+
+    // --- NOUVEAU : Gestion du changement de mode ---
+    function toggleMode() {
+        const mode = document.querySelector('input[name="operation-mode"]:checked').value;
+        const sketchupControls = document.getElementById('sketchup-mode-controls');
+        const editControls = document.getElementById('edit-mode-controls');
+        const sourceLabel = document.getElementById('source-label');
+
+        if (mode === 'sketchup') {
+            sketchupControls.style.display = 'block';
+            editControls.style.display = 'none';
+            sourceLabel.innerText = "Source (SketchUp)";
+        } else {
+            sketchupControls.style.display = 'none';
+            editControls.style.display = 'block';
+            sourceLabel.innerText = "Source (Uploaded Image)";
+        }
+        
+        // Optionnel : Réinitialiser l'aperçu quand on change de mode
+        // document.getElementById('preview').style.display = "none";
+        // currentBase64 = null;
+    }
+
+    // --- NOUVEAU : Gestion de l'upload de l'image source à éditer ---
+    function handleEditUpload(files) {
+        if (files.length === 0) return;
+        const file = files[0];
+        if (!file.type.startsWith('image/')) {
+            alert("Veuillez sélectionner une image valide.");
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const base64Raw = e.target.result.split(',')[1];
+            currentMime = file.type;
+            currentBase64 = base64Raw;
+            
+            const img = document.getElementById('preview');
+            img.src = e.target.result;
+            img.style.display = "block";
+            
+            // Masquer les résultats précédents
+            document.getElementById('generatedImage').style.display = 'none';
+            document.getElementById('dlLink').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
     }
 
     function captureSketchUp() {
@@ -144,17 +236,25 @@
         }
 
         const userText = document.getElementById('prompt').value;
+        const resolution = document.getElementById('resolution-select').value; 
+        const ratio = document.getElementById('ratio-select').value; 
+        const mode = document.querySelector('input[name="operation-mode"]:checked').value;
 
-        const resolution = document.getElementById('resolution-select').value; // 'standard', '2K', '4K'
-        const ratio = document.getElementById('ratio-select').value; // 'auto', '16:9', etc.
-
-        const styleInstruction = `
-        Make the first image like a real photo. Shot in natural daylight.
-        High-resolution photography style.
-        Looks like a candid real-life professional photography taken with a iphone 4k or DSLR. 
-        Hyperreal, indistinguishable from a real photo. 
-        Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
-        `;
+        // --- NOUVEAU : Ajustement du prompt selon le mode ---
+        let styleInstruction = "";
+        if (mode === 'sketchup') {
+            styleInstruction = `
+            Make the first image like a real photo. Shot in natural daylight.
+            High-resolution photography style.
+            Looks like a candid real-life professional photography taken with a iphone 4k or DSLR. 
+            Hyperreal, indistinguishable from a real photo. 
+            Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
+            `;
+        } else {
+            // Mode Edit : Prompt plus neutre pour appliquer directement la demande de l'utilisateur
+            styleInstruction = `Edit the first image exactly as requested. Keep the original style and elements intact unless specified otherwise. Request: `;
+        }
+        
         const finalPrompt = styleInstruction + userText;
 
         const loader = document.getElementById('loader');
@@ -166,7 +266,7 @@
             alert("Error API !"); 
             return; 
         }
-        if (!currentBase64) { alert("First, capture !"); return; }
+        if (!currentBase64) { alert("First, provide a source image (Capture or Upload)!"); return; }
 
         loader.style.display = 'block';
         errorDiv.style.display = 'none';
@@ -276,6 +376,7 @@
             loader.style.display = 'none';
         }
     }
+    
     window.addEventListener('load', function() {
         if (typeof sketchup !== 'undefined') {
             sketchup.request_api_key();
@@ -284,3 +385,4 @@
 </script>
 
 </body>
+</html>
