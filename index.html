@@ -1,87 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banana Archrender</title>
-    <style>
-        /* Ajout de quelques styles pour le sélecteur de mode */
-        .mode-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            background: #f0f0f0; /* Adapte la couleur à ton main.css si besoin */
-            padding: 10px;
-            border-radius: 8px;
-        }
-        .mode-selector label {
-            cursor: pointer;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body class="page">
 
-<div class="container">
-    <h1 class="main-title">Banana Archrender</h1>
+<main class="app-card">
+    <header class="app-card__header">
+        <h1 class="app-card__title">Banana Archrender</h1>
+    </header>
 
-    <div class="mode-selector">
-        <label>
-            <input type="radio" name="operation-mode" value="sketchup" checked onchange="toggleMode()"> 
-            Capture SketchUp
-        </label>
-        <label>
-            <input type="radio" name="operation-mode" value="edit" onchange="toggleMode()"> 
-            Éditer une image
-        </label>
-    </div>
-
-    <div id="edit-mode-controls" style="display: none;">
-        <button onclick="document.getElementById('edit-upload-input').click()" id="btn-upload-edit">
-            1. 📂 Upload Image to Edit
-        </button>
-        <input type="file" id="edit-upload-input" accept="image/*" style="display:none" onchange="handleEditUpload(this.files)">
-    </div>
-
-    <div id="sketchup-mode-controls">
-        <button onclick="captureSketchUp()" id="btn-capture">1. 📸 Capture from SketchUp</button>
-    </div>
-
-    <div id="edit-mode-controls" style="display: none;">
-        <button onclick="document.getElementById('edit-upload-input').click()" id="btn-upload-edit" style="background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
-            1. 📂 Upload Image to Edit
-        </button>
-        <input type="file" id="edit-upload-input" accept="image/*" style="display:none" onchange="handleEditUpload(this.files)">
-    </div>
-
-    <div class="img-container">
-        <span class="label" id="source-label">Source (SketchUp)</span>
-        <img id="preview" src="" alt="Source View" style="display:none; max-width: 100%; margin-top: 10px;">
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 15px;">
-        <span class="label">Reference images (Optional)</span>
-        <div class="upload-zone" id="drop-zone" onclick="document.getElementById('ref-input').click()">
-            <span class="upload-text">Click or drag images here</span>
-            <input type="file" id="ref-input" multiple accept="image/*" style="display:none" onchange="handleRefFiles(this.files)">
+    <section class="app-card__section">
+        <div class="toggle-group" id="operation-mode-group">
+            <label class="toggle-group__label">
+                <input class="toggle-group__input" type="radio" name="operation-mode" value="sketchup" checked>
+                <span class="toggle-group__text">New image</span>
+            </label>
+            <label class="toggle-group__label">
+                <input class="toggle-group__input" type="radio" name="operation-mode" value="edit">
+                <span class="toggle-group__text">Edit image</span>
+            </label>
         </div>
-        <div id="ref-gallery" class="ref-gallery"></div>
-    </div>
+    </section>
 
-    <textarea id="prompt" placeholder="Describe here the modifications, materials or additional features (e.g., Modern red brick, make the sky blue, etc...)"></textarea>
+    <section class="app-card__section">
+        <div class="control-panel" id="sketchup-mode-controls">
+            <button class="btn btn--primary" id="btn-capture">
+                1. 📸 Capture from SketchUp
+            </button>
+        </div>
 
-    <div class="settings-row">
-        <div class="setting-group">
-            <span class="label" style="margin-bottom:2px">Resolution</span>
-            <select id="resolution-select">
+        <div class="control-panel control-panel--hidden" id="edit-mode-controls">
+            <button class="btn btn--primary" id="btn-upload-edit">
+                1. 📂 Upload Image to Edit
+            </button>
+            <input class="visually-hidden" type="file" id="edit-upload-input" accept="image/*">
+        </div>
+    </section>
+
+    <section class="app-card__section preview-box">
+        <span class="form-label" id="source-label">Source (SketchUp)</span>
+        <img class="preview-box__image preview-box__image--hidden" id="preview" src="" alt="Source View">
+    </section>
+
+    <section class="app-card__section">
+        <span class="form-label">Reference images (Optional)</span>
+        <div class="dropzone" id="drop-zone">
+            <span class="dropzone__text">Click or drag images here</span>
+            <input class="visually-hidden" type="file" id="ref-input" multiple accept="image/*">
+        </div>
+        <div class="gallery" id="ref-gallery"></div>
+    </section>
+
+    <section class="app-card__section">
+        <div class="form-group" id="style-group">
+            <span class="form-label">Style</span>
+            <div class="toggle-group toggle-group--compact">
+                <label class="toggle-group__label">
+                    <input class="toggle-group__input" type="radio" name="render-style" value="realistic" checked>
+                    <span class="toggle-group__text">Realistic</span>
+                </label>
+                <label class="toggle-group__label">
+                    <input class="toggle-group__input" type="radio" name="render-style" value="3d">
+                    <span class="toggle-group__text">3D Render</span>
+                </label>
+                <label class="toggle-group__label">
+                    <input class="toggle-group__input" type="radio" name="render-style" value="none">
+                    <span class="toggle-group__text">None</span>
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <section class="app-card__section">
+        <textarea class="form-textarea" id="prompt" placeholder="Describe here the modifications, materials or additional features (e.g., Modern red brick, make the sky blue, etc...)"></textarea>
+    </section>
+
+    <section class="app-card__section settings-grid">
+        <div class="form-group">
+            <span class="form-label">Resolution</span>
+            <select class="form-select" id="resolution-select">
                 <option value="standard">1K (Fast)</option>
                 <option value="2K">2K (Balanced)</option>
                 <option value="4K" selected>4K (High Quality)</option>
             </select>
         </div>
-        <div class="setting-group">
-            <span class="label" style="margin-bottom:2px">Ratio</span>
-            <select id="ratio-select">
+        <div class="form-group">
+            <span class="form-label">Ratio</span>
+            <select class="form-select" id="ratio-select">
                 <option value="auto" selected>Auto (Keep Original)</option>
                 <option value="1:1">Square (1:1)</option>
                 <option value="16:9">Landscape (16:9)</option>
@@ -89,229 +98,320 @@
                 <option value="9:16">Portrait (9:16)</option>
             </select>
         </div>
+    </section>
+
+    <section class="app-card__section">
+        <div class="text-caption">Actual model: gemini-3-pro-image-preview</div>
+        <button class="btn btn--primary btn--margin-top" id="btn-generate">
+            2. Generate
+        </button>
+    </section>
+
+    <div class="status-message status-message--loading status-message--hidden" id="loader">
+        ✨ Calculating rendering in progress....<br>
+        <small>(This may take 30 seconds.)</small>
     </div>
-    <div class="text-secondary">Actual model : gemini-3-pro-image-preview</div>
-    <button onclick="callGemini()" id="btn-generate">2. Generate</button>
+    <div class="status-message status-message--error status-message--hidden" id="error-msg"></div>
 
-    <div id="loader" style="display:none;">✨ Calculating rendering in progress....<br><small>(This may take 30 seconds.)</small></div>
-    <div id="error-msg" style="display:none; color: red;"></div>
+    <section class="app-card__section preview-box">
+        <span class="form-label">AI Result</span>
+        <img class="preview-box__image preview-box__image--hidden" id="generatedImage" src="" alt="AI Generated Image">
+        <a class="btn-download btn-download--hidden" id="dlLink" href="#" download="rendu_nanobanana.png">Save as...</a>
+    </section>
 
-    <div class="img-container">
-        <span class="label">AI Result</span>
-        <img id="generatedImage" src="" alt="Image Générée" style="display:none; max-width: 100%;">
-        <a id="dlLink" class="download-btn" href="#" download="rendu_nanobanana.png" style="display:none;">Save as...</a>
-    </div>
-
-    <footer>
-        <div class="footer-copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</div>
+    <footer class="app-card__footer">
+        <p class="copyright-text">© 2025 Developed by Borgniet Rudy for Starc. Tous droits réservés.</p>
     </footer>
-</div>
+</main>
 
 <script>
-    let currentBase64 = null;
-    let currentMime = null;
-    let referenceImages = []; 
+    /**
+     * ==========================================
+     * APPLICATION STATE
+     * ==========================================
+     */
+    const AppState = {
+        currentBase64: null,
+        currentMime: null,
+        referenceImages: [],
+        apiKey: ""
+    };
 
-    let GOOGLE_API_KEY = "";
-
-    function receiveApiKey(key) {
-        GOOGLE_API_KEY = key;
-        console.log("API KEY Sent.");
-    }
-
-    // --- NOUVEAU : Gestion du changement de mode ---
-    function toggleMode() {
-        const mode = document.querySelector('input[name="operation-mode"]:checked').value;
-        const sketchupControls = document.getElementById('sketchup-mode-controls');
-        const editControls = document.getElementById('edit-mode-controls');
-        const sourceLabel = document.getElementById('source-label');
-
-        if (mode === 'sketchup') {
-            sketchupControls.style.display = 'block';
-            editControls.style.display = 'none';
-            sourceLabel.innerText = "Source (SketchUp)";
-        } else {
-            sketchupControls.style.display = 'none';
-            editControls.style.display = 'block';
-            sourceLabel.innerText = "Source (Uploaded Image)";
-        }
+    /**
+     * ==========================================
+     * DOM ELEMENTS CACHE
+     * ==========================================
+     */
+    const DOM = {
+        // Modes
+        modeRadios: document.querySelectorAll('input[name="operation-mode"]'),
+        sketchupControls: document.getElementById('sketchup-mode-controls'),
+        editControls: document.getElementById('edit-mode-controls'),
+        sourceLabel: document.getElementById('source-label'),
+        styleGroup: document.getElementById('style-group'),
+        styleInputs: document.querySelectorAll('input[name="render-style"]'),
         
-        // Optionnel : Réinitialiser l'aperçu quand on change de mode
-        // document.getElementById('preview').style.display = "none";
-        // currentBase64 = null;
+        // Inputs & Buttons
+        btnUploadEdit: document.getElementById('btn-upload-edit'),
+        editUploadInput: document.getElementById('edit-upload-input'),
+        btnCapture: document.getElementById('btn-capture'),
+        btnGenerate: document.getElementById('btn-generate'),
+        promptInput: document.getElementById('prompt'),
+        resolutionSelect: document.getElementById('resolution-select'),
+        ratioSelect: document.getElementById('ratio-select'),
+        
+        // Previews & Dropzone
+        previewImg: document.getElementById('preview'),
+        dropZone: document.getElementById('drop-zone'),
+        refInput: document.getElementById('ref-input'),
+        refGallery: document.getElementById('ref-gallery'),
+        
+        // Results & Status
+        loader: document.getElementById('loader'),
+        errorMsg: document.getElementById('error-msg'),
+        generatedImage: document.getElementById('generatedImage'),
+        dlLink: document.getElementById('dlLink')
+    };
+
+    /**
+     * ==========================================
+     * RUBY INTERFACE (Exposed to global window)
+     * ==========================================
+     */
+    
+    // Called by Ruby plugin to inject the API key
+    window.receiveApiKey = function(key) {
+        AppState.apiKey = key;
+        console.log("API KEY successfully injected.");
+    };
+
+    // Called by Ruby plugin to pass the captured view
+    window.receiveImageFromRuby = function(mime, base64) {
+        if (!DOM.previewImg) return;
+        
+        AppState.currentMime = mime;
+        AppState.currentBase64 = base64;
+        
+        DOM.previewImg.src = `data:${mime};base64,${base64}`;
+        DOM.previewImg.classList.remove('preview-box__image--hidden');
+
+        resetResultView();
+    };
+
+    /**
+     * ==========================================
+     * EVENT LISTENERS BINDING
+     * ==========================================
+     */
+    function bindEvents() {
+        // Mode switching
+        DOM.modeRadios.forEach(radio => radio.addEventListener('change', handleModeToggle));
+
+        // SketchUp Capture
+        DOM.btnCapture.addEventListener('click', triggerSketchUpCapture);
+
+        // Edit Image Upload
+        DOM.btnUploadEdit.addEventListener('click', () => DOM.editUploadInput.click());
+        DOM.editUploadInput.addEventListener('change', (e) => handleSourceUpload(e.target.files));
+
+        // Drag & Drop Reference Images
+        DOM.dropZone.addEventListener('click', () => DOM.refInput.click());
+        DOM.refInput.addEventListener('change', (e) => handleReferenceFiles(e.target.files));
+        
+        DOM.dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            DOM.dropZone.classList.add('dropzone--dragover');
+        });
+        
+        DOM.dropZone.addEventListener('dragleave', () => {
+            DOM.dropZone.classList.remove('dropzone--dragover');
+        });
+        
+        DOM.dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            DOM.dropZone.classList.remove('dropzone--dragover');
+            if (e.dataTransfer.files.length > 0) {
+                handleReferenceFiles(e.dataTransfer.files);
+            }
+        });
+
+        // Generation Trigger
+        DOM.btnGenerate.addEventListener('click', executeGeminiGeneration);
+
+        // Initialization (Request API key from SketchUp)
+        window.addEventListener('load', () => {
+            if (typeof sketchup !== 'undefined') sketchup.request_api_key();
+        });
     }
 
-    // --- NOUVEAU : Gestion de l'upload de l'image source à éditer ---
-    function handleEditUpload(files) {
+    /**
+     * ==========================================
+     * CORE LOGIC & HANDLERS
+     * ==========================================
+     */
+
+    function handleModeToggle() {
+        const selectedMode = document.querySelector('input[name="operation-mode"]:checked').value;
+
+        if (selectedMode === 'sketchup') {
+            DOM.sketchupControls.classList.remove('control-panel--hidden');
+            DOM.editControls.classList.add('control-panel--hidden');
+            DOM.sourceLabel.innerText = "Source (SketchUp)";
+            
+            // Re-enable style selector
+            DOM.styleGroup.classList.remove('form-group--disabled');
+            DOM.styleInputs.forEach(input => input.disabled = false);
+        } else {
+            DOM.sketchupControls.classList.add('control-panel--hidden');
+            DOM.editControls.classList.remove('control-panel--hidden');
+            DOM.sourceLabel.innerText = "Source (Uploaded Image)";
+            
+            // Disable style selector for edit mode
+            DOM.styleGroup.classList.add('form-group--disabled');
+            DOM.styleInputs.forEach(input => input.disabled = true);
+        }
+    }
+
+    function triggerSketchUpCapture() {
+        if (typeof sketchup !== 'undefined') {
+            sketchup.capture_view();
+        } else {
+            console.warn("SketchUp environment not detected.");
+        }
+    }
+
+    function handleSourceUpload(files) {
         if (files.length === 0) return;
+        
         const file = files[0];
         if (!file.type.startsWith('image/')) {
-            alert("Veuillez sélectionner une image valide.");
+            alert("Please select a valid image file.");
             return;
         }
         
         const reader = new FileReader();
         reader.onload = (e) => {
+            // Extract pure base64 string
             const base64Raw = e.target.result.split(',')[1];
-            currentMime = file.type;
-            currentBase64 = base64Raw;
+            AppState.currentMime = file.type;
+            AppState.currentBase64 = base64Raw;
             
-            const img = document.getElementById('preview');
-            img.src = e.target.result;
-            img.style.display = "block";
+            DOM.previewImg.src = e.target.result;
+            DOM.previewImg.classList.remove('preview-box__image--hidden');
             
-            // Masquer les résultats précédents
-            document.getElementById('generatedImage').style.display = 'none';
-            document.getElementById('dlLink').style.display = 'none';
-            document.getElementById('error-msg').style.display = 'none';
+            resetResultView();
         };
         reader.readAsDataURL(file);
     }
 
-    function captureSketchUp() {
-        if (typeof sketchup !== 'undefined') sketchup.capture_view();
-    }
-
-    function receiveImageFromRuby(mime, base64) {
-        const img = document.getElementById('preview');
-        if (!img) return;
-        currentMime = mime;
-        currentBase64 = base64;
-        img.src = "data:" + mime + ";base64," + base64;
-        img.style.display = "block";
-
-        document.getElementById('generatedImage').style.display = 'none';
-        document.getElementById('dlLink').style.display = 'none';
-        document.getElementById('error-msg').style.display = 'none';
-    }
-
-    const dropZone = document.getElementById('drop-zone');
-
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.classList.add('dragover');
-    });
-
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('dragover');
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) {
-            handleRefFiles(e.dataTransfer.files);
-        }
-    });
-
-    function handleRefFiles(files) {
+    function handleReferenceFiles(files) {
         Array.from(files).forEach(file => {
             if (!file.type.startsWith('image/')) return;
+            
             const reader = new FileReader();
             reader.onload = (e) => {
                 const base64Raw = e.target.result.split(',')[1];
-                const mimeType = file.type;
-                referenceImages.push({ mime: mimeType, data: base64Raw });
+                
+                // Add to state
+                AppState.referenceImages.push({ 
+                    mime: file.type, 
+                    data: base64Raw 
+                });
+                
+                // Create thumbnail UI
                 const thumb = document.createElement('img');
                 thumb.src = e.target.result;
-                thumb.className = 'ref-thumb';
-                thumb.title = "Click for remove";
-                thumb.onclick = function() { removeReference(this, base64Raw); };
-                document.getElementById('ref-gallery').appendChild(thumb);
+                thumb.className = 'gallery__item';
+                thumb.title = "Click to remove";
+                thumb.onclick = () => removeReferenceImage(thumb, base64Raw);
+                
+                DOM.refGallery.appendChild(thumb);
             };
             reader.readAsDataURL(file);
         });
     }
 
-    function removeReference(imgElement, b64Data) {
-        referenceImages = referenceImages.filter(img => img.data !== b64Data);
+    function removeReferenceImage(imgElement, b64Data) {
+        AppState.referenceImages = AppState.referenceImages.filter(img => img.data !== b64Data);
         imgElement.remove();
     }
 
-    async function callGemini() {
-        const apiKey = GOOGLE_API_KEY;
-        if (!apiKey) { 
-            alert("Erreur : La clé API n'a pas été chargée depuis le plugin."); 
-            return; 
-        }
+    function resetResultView() {
+        DOM.generatedImage.classList.add('preview-box__image--hidden');
+        DOM.dlLink.classList.add('btn-download--hidden');
+        DOM.errorMsg.classList.add('status-message--hidden');
+    }
 
-        const userText = document.getElementById('prompt').value;
-        const resolution = document.getElementById('resolution-select').value; 
-        const ratio = document.getElementById('ratio-select').value; 
+    function buildPromptText() {
+        const userText = DOM.promptInput.value;
         const mode = document.querySelector('input[name="operation-mode"]:checked').value;
-
-        // --- NOUVEAU : Ajustement du prompt selon le mode ---
+        const styleChoice = document.querySelector('input[name="render-style"]:checked').value;
+        
         let styleInstruction = "";
+
         if (mode === 'sketchup') {
-            styleInstruction = `
-            Make the first image like a real photo. Shot in natural daylight.
-            High-resolution photography style.
-            Looks like a candid real-life professional photography taken with a iphone 4k or DSLR. 
-            Hyperreal, indistinguishable from a real photo. 
-            Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : 
-            `;
+            if (styleChoice === 'realistic') {
+                styleInstruction = "Make the first image like a real photo. Shot in natural daylight. High-resolution photography style. Looks like a candid real-life professional photography taken with a iphone 4k or DSLR. Hyperreal, indistinguishable from a real photo. Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : ";
+            } else if (styleChoice === '3d') {
+                styleInstruction = "Make the first image look like a high-end 3D architectural render (e.g., V-Ray, Corona, or Lumion style). Impeccable architectural lighting, crisp details, realistic textures, ambient occlusion and beautiful global illumination. Respect all the geometries of the volumes and the location of the windows, as well as the angle of view of the first image. The materials are : ";
+            }
         } else {
-            // Mode Edit : Prompt plus neutre pour appliquer directement la demande de l'utilisateur
-            styleInstruction = `Edit the first image exactly as requested. Keep the original style and elements intact unless specified otherwise. Request: `;
+            styleInstruction = "Edit the first image exactly as requested. Keep the original style, geometry, and unmentioned elements completely intact. Request: ";
         }
         
-        const finalPrompt = styleInstruction + userText;
+        return styleInstruction + userText;
+    }
 
-        const loader = document.getElementById('loader');
-        const errorDiv = document.getElementById('error-msg');
-        const resultImg = document.getElementById('generatedImage');
-        const dlLink = document.getElementById('dlLink');
-
-        if (!apiKey || apiKey === "TA_CLE_API_ICI") { 
-            alert("Error API !"); 
+    async function executeGeminiGeneration() {
+        if (!AppState.apiKey || AppState.apiKey === "TA_CLE_API_ICI") { 
+            alert("Error: API Key missing or not loaded from plugin."); 
             return; 
         }
-        if (!currentBase64) { alert("First, provide a source image (Capture or Upload)!"); return; }
 
-        loader.style.display = 'block';
-        errorDiv.style.display = 'none';
-        resultImg.style.display = 'none';
-        dlLink.style.display = 'none';
-        errorDiv.innerText = "";
+        if (!AppState.currentBase64) { 
+            alert("First, provide a source image (Capture or Upload)!"); 
+            return; 
+        }
 
-        const modelName = "models/gemini-3-pro-image-preview";
-        const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`;
+        const finalPrompt = buildPromptText();
+        const resolution = DOM.resolutionSelect.value; 
+        const ratio = DOM.ratioSelect.value; 
 
-        let parts = [
-            { "text": finalPrompt }
-        ];
+        // Update UI State
+        DOM.loader.classList.remove('status-message--hidden');
+        resetResultView();
+        DOM.errorMsg.innerText = "";
 
+        // Build Payload
+        const parts = [{ text: finalPrompt }];
+        
+        // Add Source Image
         parts.push({ 
-            "inline_data": { "mime_type": currentMime, "data": currentBase64 } 
+            inline_data: { mime_type: AppState.currentMime, data: AppState.currentBase64 } 
         });
 
-        referenceImages.forEach(refImg => {
+        // Add References
+        AppState.referenceImages.forEach(refImg => {
             parts.push({
-                "inline_data": { "mime_type": refImg.mime, "data": refImg.data }
+                inline_data: { mime_type: refImg.mime, data: refImg.data }
             });
         });
 
-        let imgConfig = {};
-
-        if (ratio !== 'auto') {
-            imgConfig.aspectRatio = ratio;
-        }
-
-        if (resolution === '4K') {
-            imgConfig.imageSize = "4K"; 
-        } 
+        // Build Configuration
+        const imgConfig = {};
+        if (ratio !== 'auto') imgConfig.aspectRatio = ratio;
+        if (resolution === '4K') imgConfig.imageSize = "4K"; 
 
         const payload = {
-            "contents": [{
-                "parts": parts
-            }],
-            "generationConfig": {
-                "responseModalities": ["IMAGE", "TEXT"],
-                "imageConfig": imgConfig
+            contents: [{ parts: parts }],
+            generationConfig: {
+                responseModalities: ["IMAGE", "TEXT"],
+                imageConfig: imgConfig
             }
         };
 
         try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${AppState.apiKey}`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -322,67 +422,60 @@
 
             if (!response.ok) {
                 const errJson = JSON.parse(rawText);
-                throw new Error(`Error API (${response.status}): ${errJson.error.message}`);
+                throw new Error(`API Error (${response.status}): ${errJson.error.message}`);
             }
 
             const data = JSON.parse(rawText);
             const candidate = data.candidates?.[0];
 
             if (candidate?.finishReason && candidate.finishReason !== "STOP") {
-                throw new Error(`⚠️ Rejected. error : ${candidate.finishReason}`);
+                throw new Error(`⚠️ Generation rejected. Reason: ${candidate.finishReason}`);
             }
 
             const resParts = candidate?.content?.parts;
-            if (!resParts) throw new Error("Réponse vide de Google.");
+            if (!resParts) throw new Error("Empty response received from Google API.");
 
             let imageFound = false;
+
             for (let part of resParts) {
-                if (part.inlineData && part.inlineData.data) {
-                    const b64 = part.inlineData.data;
-                    const mime = part.inlineData.mimeType || "image/png";
+                // Handle both snake_case and camelCase API return variations
+                const inlineData = part.inlineData || part.inline_data;
+                
+                if (inlineData && inlineData.data) {
+                    const b64 = inlineData.data;
+                    const mime = inlineData.mimeType || inlineData.mime_type || "image/png";
                     const finalSrc = `data:${mime};base64,${b64}`;
 
-                    resultImg.src = finalSrc;
-                    resultImg.style.display = "block";
-                    dlLink.href = finalSrc;
-                    dlLink.style.display = "inline-block";
+                    DOM.generatedImage.src = finalSrc;
+                    DOM.generatedImage.classList.remove('preview-box__image--hidden');
+                    
+                    DOM.dlLink.href = finalSrc;
+                    DOM.dlLink.classList.remove('btn-download--hidden');
+                    
                     imageFound = true;
-                } 
-                else if (part.inline_data && part.inline_data.data) {
-                    const b64 = part.inline_data.data;
-                    const mime = part.inline_data.mime_type || "image/png";
-                    const finalSrc = `data:${mime};base64,${b64}`;
-
-                    resultImg.src = finalSrc;
-                    resultImg.style.display = "block";
-                    dlLink.href = finalSrc;
-                    dlLink.style.display = "inline-block";
-                    imageFound = true;
+                    break; // Stop parsing parts once image is found
                 }
             }
 
             if (!imageFound) {
                 if (resParts[0].text) {
-                    throw new Error("L'IA a répondu du texte : " + resParts[0].text);
+                    throw new Error("AI responded with text instead of image: " + resParts[0].text);
                 }
-                throw new Error("Aucune image trouvée dans la réponse JSON.");
+                throw new Error("No image found in the JSON response payload.");
             }
 
-        } catch (e) {
-            console.error(e);
-            errorDiv.innerText = e.message;
-            errorDiv.style.display = 'block';
+        } catch (error) {
+            console.error(error);
+            DOM.errorMsg.innerText = error.message;
+            DOM.errorMsg.classList.remove('status-message--hidden');
         } finally {
-            loader.style.display = 'none';
+            DOM.loader.classList.add('status-message--hidden');
         }
     }
-    
-    window.addEventListener('load', function() {
-        if (typeof sketchup !== 'undefined') {
-            sketchup.request_api_key();
-        }
-    });
-</script>
 
+    // Initialize the application
+    bindEvents();
+
+</script>
 </body>
 </html>
